@@ -1,6 +1,11 @@
 import re
 import sys
 
+def isliteral(s):
+    if re.match(r'[0-9]+', s) or s[0] == '"' and s[-1] == '"':
+        return True
+    return False
+
 def lexline(line):
     r=[]
     s=0
@@ -41,7 +46,7 @@ def lexline(line):
             s += len(m.group(0))
             
         elif re.match(r'^[0-9]+', line[s:]):
-            print('Num')
+            #print('Num')
             m = re.match(r'^[0-9]+', line[s:])
             r.append(m.group(0))
             s += len(m.group(0))
@@ -57,10 +62,18 @@ def lexline(line):
 
 def run(script):
     script = script.split('\n')
-    i = 0
-    while i < len(script):
-
-        i+=1
+    for line in script:
+        line = lexline(line)
+        i = 0
+        while i < len(line):
+            if line[i] == 'PRINT':
+                if isliteral(line[i+1]):
+                    print line[i+1].strip('"')
+                else:
+                    print env[line[i+1]]
+                i+=1
+            i+=1
 
 if __name__ == '__main__':
-    print(lexline(raw_input()))
+    run(raw_input())
+    raw_input()
