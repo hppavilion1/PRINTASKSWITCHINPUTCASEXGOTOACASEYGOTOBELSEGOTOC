@@ -60,6 +60,9 @@ def lexline(line):
         #print r
     return r
 
+def findcase(var, script):
+    
+
 def run(script):
     script = script.split('\n')
     for line in script:
@@ -68,10 +71,14 @@ def run(script):
         while i < len(line):
             if line[i] == 'PRINT':
                 if isliteral(line[i+1]):
-                    print line[i+1].strip('"')
+                    print(line[i+1].strip('"'), end='')
                 else:
-                    print env[line[i+1]]
+                    print(env[line[i+1]], end='')
                 i+=1
+            elif line[i] == 'ASK':
+                env['INPUT'] = raw_input()
+            elif line[i] == 'SWITCH':
+                findcase(line[i+2:])
             i+=1
 
 if __name__ == '__main__':
