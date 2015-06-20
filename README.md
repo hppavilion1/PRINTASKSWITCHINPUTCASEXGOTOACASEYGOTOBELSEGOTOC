@@ -1,3 +1,3 @@
 # PRINTASKSWITCHINPUTCASEXGOTOACASEYGOTOBELSEGOTOC
 A PRINTASKSWITCHINPUTCASEXGOTOACASEYGOTOBELSEGOTOC interpreter
-[http://esolangs.org/wiki/Main_Page]
+[[http://esolangs.org/wiki/Main_Page]]
