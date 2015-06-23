@@ -1,3 +1,4 @@
+from __future__ import print_function
 import re
 import sys
 
@@ -57,29 +58,89 @@ def lexline(line):
 
         else:
             raise ValueError('Invalid String '+line[s:])
-        #print r
+        #print(r)
     return r
 
-def findcase(var, script):
+def parsecase(con): #Con is for construct
+    i = 0
+    r = {}
+    while i < len(con):
+        if con[i] == 'CASE':
+            key = con[i+1]
+            i += 2
+            val = []
+            while not con[i] == 'CASE' and not con[i] == 'ELSE' and not i == len(con):
+                val += con[i]
+                i += 1
+            r[key] = val
+                
+        elif con[i] == 'ELSE':
+            key = '*'
+            i += 1
+            val = []
+            while not i == len(con):
+                val += con[i]
+                i += 1
+            r[key] = val
+    return r
     
+def findcase(val, cases):
+    if cases.get(val):
+        return cases[val]
+    elif cases.get('*'):
+        return cases['*']
+    return None
 
 def run(script):
+    env = {'ELSE': True}
+    ended = False
+    linenum = 0 #Starting Line
     script = script.split('\n')
-    for line in script:
+    while ended != True:
+        line = script[linenum]
         line = lexline(line)
         i = 0
-        while i < len(line):
-            if line[i] == 'PRINT':
-                if isliteral(line[i+1]):
+
+        linedone = False
+        while i < len(line) and linedone != True:
+            if line[i] == 'PRINT': #Printing stuff
+                if isliteral(line[i+1]): #Use variables
                     print(line[i+1].strip('"'), end='')
                 else:
                     print(env[line[i+1]], end='')
-                i+=1
+                i+=2
+                
             elif line[i] == 'ASK':
+                print('Asking')
                 env['INPUT'] = raw_input()
+                i+=1
+                
             elif line[i] == 'SWITCH':
-                findcase(line[i+2:])
-            i+=1
+                print('Switching')
+                switchvar = line[i+1]
+                if not isliteral(switchvar): #Use variables
+                    switchvar = env[switchvar]
+
+                output = findcase(switchvar, parsecase(line[i+2:]))
+
+                print('parsed and found case')
+                
+                line = line[:i]
+                line += output
+                i+=1
+
+            elif line[i] == 'GOTO':
+                print('Gotoing')
+                if isliteral(line[i+1]):
+                    linenum = int(line[i+1])
+                    linedone = True
+                else:
+                    linenum = int(env[line[i+1]])
+                    linedone = True
+
+            elif line[i] == 'END': #Terminate the Script
+                linedone = True
+                ended = True 
 
 if __name__ == '__main__':
     run(raw_input())
