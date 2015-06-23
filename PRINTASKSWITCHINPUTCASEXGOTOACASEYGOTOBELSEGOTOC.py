@@ -132,10 +132,6 @@ def run(script):
                     linenum = int(env[line[i+1]])
                     linedone = True
 
-            elif line[i] == 'END': #Terminate the Script
-                linedone = True
-                ended = True 
-
 if __name__ == '__main__':
     run(raw_input())
     raw_input()
