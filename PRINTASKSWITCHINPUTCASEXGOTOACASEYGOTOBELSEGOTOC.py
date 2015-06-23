@@ -70,7 +70,7 @@ def parsecase(con): #Con is for construct
             i += 2
             val = []
             while not con[i] == 'CASE' and not con[i] == 'ELSE' and not i == len(con):
-                val += con[i]
+                val += [con[i]]
                 i += 1
             r[key] = val
                 
@@ -79,7 +79,7 @@ def parsecase(con): #Con is for construct
             i += 1
             val = []
             while not i == len(con):
-                val += con[i]
+                val += [con[i]]
                 i += 1
             r[key] = val
     return r
@@ -111,26 +111,20 @@ def run(script):
                 i+=2
                 
             elif line[i] == 'ASK':
-                print('Asking')
                 env['INPUT'] = raw_input()
                 i+=1
                 
             elif line[i] == 'SWITCH':
-                print('Switching')
                 switchvar = line[i+1]
                 if not isliteral(switchvar): #Use variables
                     switchvar = env[switchvar]
 
                 output = findcase(switchvar, parsecase(line[i+2:]))
 
-                print('parsed and found case')
-                
                 line = line[:i]
                 line += output
-                i+=1
-
+                
             elif line[i] == 'GOTO':
-                print('Gotoing')
                 if isliteral(line[i+1]):
                     linenum = int(line[i+1])
                     linedone = True
